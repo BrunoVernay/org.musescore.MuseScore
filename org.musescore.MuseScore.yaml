@@ -14,15 +14,15 @@ rename-icon: mscore
 
 finish-args:
   # X11 + XShm access
-  - --share=ipc
-  - --socket=x11
+  #- --share=ipc
+  #- --socket=x11
   # Enable Wayland but keep X11 default for now
   - --socket=wayland
-  - --env=QT_QPA_PLATFORM=xcb
+  - --env=QT_QPA_PLATFORM=wayland
   # MuseScore.com connectivity
   - --share=network
   # Note playback
-  - --socket=pulseaudio
+  - --socket=jack
   # PortAudio/MIDI
   - --device=all
   # Allow loading/saving files from anywhere
@@ -35,6 +35,11 @@ finish-args:
   - --system-talk-name=org.freedesktop.RealtimeKit1
   # Allow UPower access 
   - --system-talk-name=org.freedesktop.UPower
+  # Avoid the warning "AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown"
+  - --env=NO_AT_BRIDGE=1
+  # Debug  https://www.freedesktop.org/software/fontconfig/fontconfig-user.html#DEBUG  no127 1041 8 1  OK: 128
+  - --env=FC_DEBUG=1024
+  # FONTCONFIG_PATH
 
 cleanup-commands:
   # Cleanup after QtWebKit
@@ -53,8 +58,8 @@ modules:
       - '*'
     sources:
       - type: archive
-        url: https://github.com/jackaudio/jack2/releases/download/v1.9.14/v1.9.14.tar.gz
-        sha256: a20a32366780c0061fd58fbb5f09e514ea9b7ce6e53b080a44b11a558a83217c
+        url: https://github.com/jackaudio/jack2/archive/refs/tags/v1.9.19.tar.gz
+        sha256: 9030f4dc11773351b6ac96affd9c89803a5587ebc1b091e5ff866f433327e4b0 
 
   - name: portaudio
     config-opts:
@@ -63,6 +68,7 @@ modules:
       - --without-jack
     sources:
       - type: archive
+        # See https://github.com/PortAudio/portaudio/releases/tag/v19.7.0
         url: http://www.portaudio.com/archives/pa_stable_v190600_20161030.tgz
         sha256: f5a21d7dcd6ee84397446fa1fa1a0675bb2e8a4a6dceb4305a8404698d8d1513
     cleanup:
@@ -96,10 +102,12 @@ modules:
     buildsystem: cmake
     config-opts:
       - -DCMAKE_BUILD_TYPE=RelWihDebInfo
+      #- -DCMAKE_BUILD_TYPE=RELEASE
+      #- -DCMAKE_BUILD_TYPE=DEBUG
       - -DBUILD_ALSA=OFF
       - -DBUILD_JACK=ON
       - -DBUILD_TELEMETRY_MODULE=OFF
-      - -DMUSESCORE_BUILD_CONFIG=release
+      #- -DMUSESCORE_BUILD_CONFIG=release
     build-options:
       arch:
         aarch64:
