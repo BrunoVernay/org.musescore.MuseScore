@@ -9,6 +9,7 @@ This is the [MuseScore](https://musescore.org/) [Flatpak](https://flatpak.org/).
 
 For normal user, go to https://FlatHub.org/apps/details/org.musescore.MuseScore
 
+
 ### Command-line arguments
 
 You may pass command line arguments, either:
@@ -41,7 +42,12 @@ Get the source from the official repo: https://github.com/flathub/org.musescore.
 
 ### Dependencies
 
-You will need to install the Qt SDK for flatpak: `flatpak install org.kde.Sdk/x86_64/5.15-21.08` (Version as of 2021-11-27, check with the `.yaml` file to be sure!)
+You will need to install the KDE (Qt) SDK for flatpak: `flatpak install org.kde.Sdk/x86_64/5.15-21.08` (Version as of 2021-11-27, check with the `.yaml` file to be sure!)
+```
+# For info https://invent.kde.org/packaging/flatpak-kde-runtime/-/branches/active
+flatpak search  kde.sdk
+```
+
 
 During MuseScore build, you may see messages like 
 ```
@@ -59,9 +65,9 @@ Note: You could use other folder than `appdir/` but since it is already in the `
 
 It will also create a `.flatpak-builder/`.
 
---keep-build-dirs
 
-
+TODO: Elaborate on following:
+`--keep-build-dirs`
 `flatpak-builder --build --user --force-clean appdir/ org.musescore.MuseScore.yaml` 
 
 
@@ -82,8 +88,6 @@ The build creates a cache in `.flatpak-builder/`. (contains downloaded resources
 It should produce a `appdir/files/lib/debug/` folder.
 TODO: check that only debug builds creates it.
 
-Timings
-- 82.26s user 10.38s system 11% cpu 13:44.99 total
 
 #### Cleanup
 
@@ -95,7 +99,7 @@ It keeps only the `downloads/`. It allows to measure the build time without the 
 
 To run in the sandbox:
 `flatpak-builder --run appdir/ org.musescore.MuseScore.yaml mscore`
-(TODO: understand what happen here.)
+(TODO: understand what happen here. It is running in Sandbox but without permissions?)
 
 
 ### Debug
@@ -117,14 +121,14 @@ To run in a debuger:
 Troubleshooting: 
 - gdb gives this message `(No debugging symbols found in mscore)`
   - Trying variations on `CMAKE_BUILD_TYPE` and `MUSESCORE_BUILD_CONFIG`
-    - Building with `RelWihDebInfo` and `release` 82.26s user 10.38s system 11% cpu 13:44.99 total
-    - Building with `RelWihDebInfo` and `dev`  83.83s user 10.32s system 11% cpu 14:01.74 total
-        - appdir-1
+    - Building with `RelWihDebInfo` and `release` 
+    - Building with `RelWihDebInfo` and `dev`  
         - still no debugging symbols in gdb
         - more or less 10s total
-    - Building with `Debug` and `dev` 82.97s user 10.55s system 16% cpu 9:30.96 total
-        - appdir-1
+    - Building with `Debug` and `dev` 
+        - makes `mscore` 32.4 Mo instead of 31.9. `/lib/debug` contains the same 210Mo `mscore.debug`
         - still no debugging symbols in gdb
+    - In all cases, there is a strange `lib/debug/lib/debug/lib/debug/lib/debug/` structure with files named `...debug.debug.debug.debug`. They relates to `Jack` and `Alsa`
 
 
 
@@ -139,11 +143,14 @@ You do not need to use the debugger to see the messages. You only need to start 
 ### Edit source code
 
 Instead of using the Git repo as a Source, you can specify a "Directory sources": https://docs.flatpak.org/en/latest/flatpak-builder-command-reference.html#idm46203909541056
+TODO: test!!
 
 In VSCode, it can be useful to add `.flatpak*/**` and `appdir*/**` to the `files.watcherExclude`. See https://code.visualstudio.com/docs/setup/linux#_visual-studio-code-is-unable-to-watch-for-file-changes-in-this-large-workspace-error-enospc 
 
 
 ### Patch
+
+TODO: Test!!
 
 
 ### References
