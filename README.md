@@ -38,9 +38,12 @@ TODO: How to install multiple version in parallel...
 
 ## Maintainers
 
-Get the source from the official repo: https://github.com/flathub/org.musescore.MuseScore.
+Get the Flatpak source from the official repo: https://github.com/flathub/org.musescore.MuseScore.
 
 `git clone git@github.com:flathub/org.musescore.MuseScore.git`
+
+
+In VSCode, it can be useful to add `.flatpak*/**` and `appdir*/**` to the `files.watcherExclude`. See https://code.visualstudio.com/docs/setup/linux#_visual-studio-code-is-unable-to-watch-for-file-changes-in-this-large-workspace-error-enospc 
 
 
 ### Dependencies
@@ -82,6 +85,11 @@ Variations on `CMAKE_BUILD_TYPE` and `MUSESCORE_BUILD_CONFIG` also gave less tha
 Typicall times: `83.83s user 10.32s system 11% cpu 14:01.74 total`
 
 => I did not find a way to improve the build time significantly. (Apart from using the cache obviously.)
+
+
+Trying to remove MuseScore modules?
+- AutoBot is a testing tool https://github.com/musescore/MuseScore/wiki/Autobot-overview
+- `BUILD_UNIT_TESTS=OFF` did not change the timing (TODO: more tests)
 
 
 #### Details
@@ -145,15 +153,31 @@ You do not need to use the debugger to see the messages. You only need to start 
 
 ### Edit source code
 
-Instead of using the Git repo as a Source, you can specify a "Directory sources": https://docs.flatpak.org/en/latest/flatpak-builder-command-reference.html#idm46203909541056
-TODO: test!!
+Instead of using the Git repo as a Source, you can specify a "Directory sources": https://docs.flatpak.org/en/latest/flatpak-builder-command-reference.html#idm46203909541056 (Builds are *not* cached when working with cirectory sources!)
 
-In VSCode, it can be useful to add `.flatpak*/**` and `appdir*/**` to the `files.watcherExclude`. See https://code.visualstudio.com/docs/setup/linux#_visual-studio-code-is-unable-to-watch-for-file-changes-in-this-large-workspace-error-enospc 
+Note: It does not work with the current `master` branch. Be sure to checkout a v3 branch.
+
+
+For example: `git clone --depth 1 git://github.com/musescore/MuseScore.git --branch 3.x`. (MuseScore repo is huge, `--depth 1` avoid downloading the whole history.)
+
+Then in `org.musescore.MuseScore.yaml`:
+```
+    sources:
+      - type: dir
+        path: ../MuseScore/
+```
+
+TODO: Would be nice to make it work with the v4 (master branch).
 
 
 ### Patch
 
+1. Create a patch or diff in MuseScore source code 
+2. Copy it in `patches\` in the Flatpak repo
+3. Reference your patch in `org.musescore.MuseScore.yaml`
+
 TODO: Test!!
+
 
 
 ### References
@@ -161,4 +185,6 @@ TODO: Test!!
 - Flatpak Wiki https://github.com/flatpak/flatpak/wiki/Tips-&-Tricks
 - MuseScore command-line options: https://musescore.org/en/handbook/3/command-line-options
 - MuseScore CMakeList https://github.com/musescore/MuseScore/blob/master/CMakeLists.txt
+- MuseScore Sources https://github.com/musescore/MuseScore/wiki/Get-MuseScore%27s-source-code
+- MuseScore Contributing (git, ...) https://github.com/musescore/MuseScore/wiki/Contributing
 - FontConfig https://www.freedesktop.org/software/fontconfig/fontconfig-user.html#DEBUG
