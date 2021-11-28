@@ -12,6 +12,7 @@ This document is intended for developers, packagers, testers ...
 If you just want to use MuseScore, go to https://FlatHub.org/apps/details/org.musescore.MuseScore and follow the instructions.
 
 
+
 ### Command-line arguments
 
 You may pass command line arguments, either:
