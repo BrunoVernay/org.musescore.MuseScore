@@ -22,7 +22,7 @@ finish-args:
   # MuseScore.com connectivity
   - --share=network
   # Note playback
-  - --socket=jack
+  #- --socket=pulseaudio
   # PortAudio/MIDI
   - --device=all
   # Allow loading/saving files from anywhere
@@ -38,7 +38,7 @@ finish-args:
   # Avoid the warning "AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown"
   - --env=NO_AT_BRIDGE=1
   # Debug  https://www.freedesktop.org/software/fontconfig/fontconfig-user.html#DEBUG  no127 1041 8 1  OK: 128
-  - --env=FC_DEBUG=1024
+  #- --env=FC_DEBUG=1024
   # FONTCONFIG_PATH
 
 cleanup-commands:
@@ -101,13 +101,21 @@ modules:
   - name: musescore
     buildsystem: cmake
     config-opts:
-      - -DCMAKE_BUILD_TYPE=RelWihDebInfo
-      #- -DCMAKE_BUILD_TYPE=RELEASE
-      #- -DCMAKE_BUILD_TYPE=DEBUG
+      #- -DCMAKE_BUILD_TYPE=RelWihDebInfo  (Only on Windows?)
+      #- -DCMAKE_BUILD_TYPE=Release  https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html
+      - -DCMAKE_BUILD_TYPE=Debug
       - -DBUILD_ALSA=OFF
       - -DBUILD_JACK=ON
       - -DBUILD_TELEMETRY_MODULE=OFF
+      # Does not change much:
+      - -DBUILD_UNIT_TESTS=OFF
+      # Does not work in Flatpak currently
+      - -DBUILD_CRASH_REPORTER=OFF
+      # USE_SYSTEM_FREETYPE
       #- -DMUSESCORE_BUILD_CONFIG=release
+      - -DMUSESCORE_BUILD_CONFIG=dev
+      #- -DCMAKE_BUILD_PARALLEL_LEVEL  https://cmake.org/cmake/help/v3.12/envvar/CMAKE_BUILD_PARALLEL_LEVEL.html
+      #- -DCMAKE_BUILD_PARALLEL_LEVEL=12
     build-options:
       arch:
         aarch64:
@@ -130,9 +138,11 @@ modules:
           done;
         done
     sources:
-      - type: archive
-        url: https://github.com/musescore/MuseScore/archive/v3.6.2.tar.gz
-        sha256: c37acc6d7a316f04925265d2d22a35d715888580e16eff846e9b621954133c45
+      - type: dir
+        path: ../MuseScore/
+#      - type: archive
+#        url: https://github.com/musescore/MuseScore/archive/v3.6.2.tar.gz
+#        sha256: c37acc6d7a316f04925265d2d22a35d715888580e16eff846e9b621954133c45
       - type: archive
         url: https://github.com/dmitrio95/libcrashreporter-qt/archive/67c71923350c9197aa3e50eaf719d4336cc4ac33.tar.gz
         sha256: 3e411d97e409d6ea5f4e0314e1fb076431e7eeb419b1f39da9359736c87033cc
