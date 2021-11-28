@@ -1,0 +1,9 @@
+{
+    "files.watcherExclude": {
+        "**/.flatpak/**": true,
+        "**/.flatpak-builder/*/**": true,
+        "**/appdir/*/**": true,
+        "**/appdir-1/*/**": true,
+        "**/appdir-2/*/**": true
+    }
+}
