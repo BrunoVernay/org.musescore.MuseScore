@@ -31,6 +31,13 @@ vim ~/.local/share/applications/org.musescore.MuseScore.desktop
 Note that these changes will be permanent! And if the Flatpak maintainer modify the Desktop file, you will not get these changes. You will have to do the merge manually.
 
 
+### Configuration files
+
+- `~/.config/MuseScore/MuseScore3.ini` main config file
+- `~/.local/share/MuseScore/MuseScore3/`  Plugins, Workspaces, ...
+- `~/.var/app/org.musescore.MuseScore/` Flatpak folder  (Usage ??)
+
+
 ### Parallel install
 
 You can have multiple installation:
