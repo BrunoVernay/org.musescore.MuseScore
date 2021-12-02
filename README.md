@@ -33,9 +33,30 @@ Note that these changes will be permanent! And if the Flatpak maintainer modify 
 
 ### Configuration files
 
-- `~/.config/MuseScore/MuseScore3.ini` main config file
-- `~/.local/share/MuseScore/MuseScore3/`  Plugins, Workspaces, ...
-- `~/.var/app/org.musescore.MuseScore/` Flatpak folder  (Usage ??)
+Looks like over the year MuseScore files have moved  (I used RPM, AppImages, ...)
+
+- `~/.var/app/org.musescore.MuseScore/` *Flatpak* "State" folder 
+  - *cache* contains very strange files like `.var/app/org.musescore.MuseScore/cache/debuginfod_client/ef...f207f/debuginfo`
+  - *config* `~/.var/app/org.musescore.MuseScore/config/MuseScore/MuseScore3.ini`
+  - *data*
+    - your workspace definitions !
+    - Shortcuts
+    - Plugins
+
+- *RPM* `~/.config/MuseScore/MuseScore3.ini` config file
+- *RPM or AppImage* `~/.local/share/MuseScore/MuseScore3/`  Plugins, Shortcuts, Workspaces, ...
+- `~/.cache/MuseScore/MuseScore3/` yet another cache??
+
+NOTE: Removing Flatpaks will not remove these files!
+
+
+Backup:
+```
+# Must clean up first otherwise, tar will fail.
+rm -rf ~/.var/app/org.musescore.MuseScore/cache
+tar -czf ~/MuseScore-conf.tgz ~/.config/MuseScore/MuseScore3.ini ~/.local/share/MuseScore/ ~/.var/app/org.musescore.MuseScore
+```
+
 
 
 ### Parallel install
