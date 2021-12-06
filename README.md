@@ -33,36 +33,53 @@ Note that these changes will be permanent! And if the Flatpak maintainer modify 
 
 ### Configuration files
 
-Looks like over the year MuseScore files have moved  (I used RPM, AppImages, ...)
+Looks like over the years, MuseScore files have moved  (I used RPM, AppImages, ...)
+
+In anycase MuseScore config is kind of messy. Not the easiest to backup/restore!
 
 - `~/.var/app/org.musescore.MuseScore/` *Flatpak* "State" folder 
   - *cache* contains very strange files like `.var/app/org.musescore.MuseScore/cache/debuginfod_client/ef...f207f/debuginfo`
   - *config* `~/.var/app/org.musescore.MuseScore/config/MuseScore/MuseScore3.ini`
-  - *data*
-    - your workspace definitions !
-    - Shortcuts
-    - Plugins
+  - *data* (it is just config!! But MuseScore call it "data" for legacy reasons)
+    - your *workspaces* definitions!
+    - `Shortcuts.xml`
+    - Plugins: useless, the plugin folder is defined in your Preferences (Default to `~/Documents/MuseScore3/Plugins/`)
+    - random stuff, like the "tours" ...
 
 - *RPM or AppImage*
-  -  `~/.config/MuseScore/MuseScore3.ini` config file
-  -  `~/.local/share/MuseScore/MuseScore3/`  Plugins, Shortcuts, Workspaces, ...
+  - `~/.config/MuseScore/MuseScore3.ini` config file
+  - `~/.local/share/MuseScore/MuseScore3/`  Plugins, Shortcuts, Workspaces, ...
   - `~/.cache/MuseScore/MuseScore3/` yet another cache??
+
 
 NOTE: Removing Flatpaks will not remove these files!
 
 
-Backup:
+This is how I organize and simplify the config:
+
+Init (You may use your own backup to initialize the config):
 ```
-# Must clean up first otherwise, tar will fail.
-rm -rf ~/.var/app/org.musescore.MuseScore/cache
-tar -czf ~/MuseScore-conf.tgz ~/.config/MuseScore/MuseScore3.ini ~/.local/share/MuseScore/ ~/.var/app/org.musescore.MuseScore
+mv ~/.var/app/org.musescore.MuseScore/config/MuseScore/MuseScore3.ini ~/.config/MuseScore/
+ln -s ~/.config/MuseScore/MuseScore3.ini ~/.var/app/org.musescore.MuseScore/config/MuseScore/MuseScore3.ini
+
+mv ~/.var/app/org.musescore.MuseScore/data/MuseScore/MuseScore3/shortcuts.xml ~/.config/MuseScore/
+ln -s ~/.config/MuseScore/shortcuts.xml ~/.var/app/org.musescore.MuseScore/data/MuseScore/MuseScore3/shortcuts.xml
+
+mv /home/bruno/.var/app/org.musescore.MuseScore/data/MuseScore/MuseScore3/workspaces ~/.config/MuseScore/
+ln -s ~/.config/MuseScore/workspaces ~/.var/app/org.musescore.MuseScore/data/MuseScore/MuseScore3/workspaces
 ```
 
+Backup:
+```
+# Clean up
+rm -rf ~/.var/app/org.musescore.MuseScore/cache
+tar -czf ~/MuseScore-conf.tgz ~/.config/MuseScore/
+```
 
 
 ### Parallel install
 
-You can have multiple installation:
+You can have multiple Flatpak installation:
 ```
 > flatpak  list | grep muse
 MuseScore	org.musescore.MuseScore	3.6.2	master	musescore-origin	user
@@ -70,6 +87,10 @@ MuseScore	org.musescore.MuseScore	3.6.2	stable	flathub	            system
 ```
 
 You can run a specific version by specifying the branch for example: `flatpak run org.musescore.MuseScore//stable`
+
+
+You can also mix RPM and AppImage or other installs ... Just be careful with the configuration files!
+
 
 
 ## Maintainers
@@ -202,6 +223,7 @@ Then in `org.musescore.MuseScore.yaml`:
       - type: dir
         path: ../MuseScore/
 ```
+
 
 TODO: Would be nice to make it work with the v4 (master branch).
 
