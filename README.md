@@ -43,9 +43,10 @@ Looks like over the year MuseScore files have moved  (I used RPM, AppImages, ...
     - Shortcuts
     - Plugins
 
-- *RPM* `~/.config/MuseScore/MuseScore3.ini` config file
-- *RPM or AppImage* `~/.local/share/MuseScore/MuseScore3/`  Plugins, Shortcuts, Workspaces, ...
-- `~/.cache/MuseScore/MuseScore3/` yet another cache??
+- *RPM or AppImage*
+  -  `~/.config/MuseScore/MuseScore3.ini` config file
+  -  `~/.local/share/MuseScore/MuseScore3/`  Plugins, Shortcuts, Workspaces, ...
+  - `~/.cache/MuseScore/MuseScore3/` yet another cache??
 
 NOTE: Removing Flatpaks will not remove these files!
 
@@ -70,9 +71,6 @@ MuseScore	org.musescore.MuseScore	3.6.2	stable	flathub	            system
 
 You can run a specific version by specifying the branch for example: `flatpak run org.musescore.MuseScore//stable`
 
-Caution: once a debug version has been installed, MuseScore will stay in "Debug" mode even after the version is removed! 
-
-TODO: find how to remove the "Debug".
 
 ## Maintainers
 
